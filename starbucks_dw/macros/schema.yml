@@ -7,3 +7,9 @@ macros:
       - name: hours
         description: Number of hours.
         type: integer
+  - name: transaction_verification
+    description: Verifies the transaction type using case when and outputs the type.
+    arguments:
+      - name: transaction_type
+        description: Transaction in question.
+        type: text

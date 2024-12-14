@@ -1,4 +1,5 @@
-/* TO BE IMPLEMENTED BY THE STUDENT */
-select 1
-union all
-select 2
+{{ config(
+    materialized='table'
+) }}
+
+{{ dbt_date.get_date_dimension("2015-01-01", "2050-12-31") }}

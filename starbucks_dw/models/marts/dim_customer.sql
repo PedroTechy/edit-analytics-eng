@@ -1,8 +1,8 @@
-{# {{
-  config(
-    materialized = 'table',
-    )
-}}
+
+
+{{ config(
+    materialized='table'
+) }}
 
 select *
-from {{ ref('stg_profile') }} #}
+from {{ ref('stg_profile') }}

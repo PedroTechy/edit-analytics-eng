@@ -1,4 +1,4 @@
-{# {{
+{{
   config(
     materialized = 'table',
     )
@@ -32,21 +32,11 @@ with
             customers.gender,
             customers.age,
             customers.income,
-            case
-                when transactions.transaction_type = 'offer received'
-                then 'received'
-                when transactions.transaction_type = 'offer viewed'
-                then 'viewed'
-                when transactions.transaction_type = 'offer completed'
-                then 'completed'
-                when transactions.transaction_type = 'transaction'
-                then 'transaction'
-            end as transaction_status,
+            {{ transaction_verification('transactions.transaction_type') }} as transaction_status,
             customers.subscribed_date as customer_subscribed_date,
             current_timestamp as ingested_at
         from transactions
         inner join customers on transactions.customer_id = customers.customer_id
     )
 
-select *
-from final #}
+select * from final
