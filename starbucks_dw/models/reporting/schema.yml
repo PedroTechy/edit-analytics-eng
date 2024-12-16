@@ -1,0 +1,81 @@
+version: 2
+
+models:
+  - name: customer_segments
+    description: Customer segments based on demographic and behavioral attributes.
+    columns:
+      - name: customer_id
+        description: Unique identifier for each customer.
+        data_type: text
+        data_tests:
+          - not_null
+      - name: gender_segment
+        description: Gender segment of the customer.
+        data_type: text
+      - name: age_segment
+        description: Age segment of the customer.
+        data_type: text
+      - name: income_segment
+        description: Income segment of the customer.
+        data_type: text
+      - name: customer_tenure_segment
+        description: Tenure segment of the customer.
+        data_type: text
+
+  - name: customer_offer_responses
+    description: Customer responses to promotional offers.
+    columns:
+      - name: customer_id
+        description: Unique identifier for each customer.
+        data_type: text
+        data_tests:
+          - not_null
+      - name: offer_id
+        description: Unique identifier for each offer.
+        data_type: text
+        data_tests:
+          - not_null
+      - name: offer_type
+        description: Type of the offer.
+        data_type: text
+      - name: offer_channel
+        description: Channel used to deliver the offer.
+        data_type: text
+      - name: response_flag
+        description: Flag indicating if the customer responded to the offer.
+        data_type: integer
+      - name: response_timestamp
+        description: Timestamp of the customer's response.
+        data_type: timestamp
+        data_tests:
+          - not_null
+
+  - name: offer_performance
+    description: Performance of different communication channels in driving customer responses to offers.
+    columns:
+      - name: offer_id
+        description: Unique identifier for each offer.
+        data_type: text
+        data_tests:
+          - not_null
+      - name: offer_type
+        description: Type of the offer.
+        data_type: text
+      - name: offer_channel
+        description: Channel used to deliver the offer.
+        data_type: text
+      - name: total_offers_sent
+        description: Total number of offers sent.
+        data_type: integer
+        data_tests:
+          - not_null
+      - name: total_offers_responded
+        description: Total number of offers responded to.
+        data_type: integer
+        data_tests:
+          - not_null
+      - name: response_rate
+        description: Response rate for the offer.
+        data_type: numeric
+        data_tests:
+          - not_null
