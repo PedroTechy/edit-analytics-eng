@@ -2,38 +2,69 @@ version: 2
 
 models:
   - name: customer_segments
-    description: Customer segments based on demographic and behavioral attributes.
+    description: Customer segments based on demographic, behavioral, and engagement attributes.
     columns:
       - name: customer_id
         description: Unique identifier for each customer.
         data_type: text
-        data_tests:
+        tests:
+          - unique
           - not_null
       - name: gender_segment
-        description: Gender segment of the customer.
+        description: Gender segment of the customer (Male, Female, Not Available).
         data_type: text
       - name: age_segment
-        description: Age segment of the customer.
+        description: Age segment of the customer (Young, Young-Adult, Middle-aged, Senior).
         data_type: text
       - name: income_segment
-        description: Income segment of the customer.
+        description: Income segment of the customer (Low Income, Middle Income, High Income).
         data_type: text
       - name: customer_tenure_segment
-        description: Tenure segment of the customer.
+        description: Tenure segment of the customer (New Customer, Recent Customer, Longstanding Customer).
         data_type: text
+      - name: activity_segment
+        description: Customer activity level based on transaction count (High Activity, Medium Activity, Low Activity).
+        data_type: text
+      - name: total_transactions
+        description: Total number of transactions made by the customer.
+        data_type: integer
+        tests:
+          - not_null
+          - positive_value
+      - name: total_responses
+        description: Total number of offer responses by the customer.
+        data_type: integer
+        tests:
+          - not_null
+          - positive_value
+      - name: subscribed_date
+        description: Date when the customer subscribed.
+        data_type: timestamp
+        tests:
+          - not_null
+      - name: updated_at
+        description: Last update timestamp of the record.
+        data_type: timestamp
+        tests:
+          - not_null
 
   - name: customer_offer_responses
-    description: Customer responses to promotional offers.
+    description: Detailed analysis of customer responses to promotional offers including timing and offer characteristics.
     columns:
       - name: customer_id
         description: Unique identifier for each customer.
         data_type: text
-        data_tests:
+        tests:
+          - not_null
+      - name: transaction_id
+        description: Unique identifier for each transaction.
+        data_type: text
+        tests:
           - not_null
       - name: offer_id
         description: Unique identifier for each offer.
         data_type: text
-        data_tests:
+        tests:
           - not_null
       - name: offer_type
         description: Type of the offer.
@@ -41,41 +72,55 @@ models:
       - name: offer_channel
         description: Channel used to deliver the offer.
         data_type: text
-      - name: response_flag
-        description: Flag indicating if the customer responded to the offer.
+      - name: difficulty_rank
+        description: Difficulty ranking of the offer.
         data_type: integer
-      - name: response_timestamp
-        description: Timestamp of the customer's response.
+      - name: duration
+        description: Duration of the offer validity.
+        data_type: integer
+      - name: reward
+        description: Reward value associated with the offer.
+        data_type: numeric
+      - name: transaction_status
+        description: Status of the transaction.
+        data_type: text
+      - name: days_since_start
+        description: Days elapsed since offer start.
+        data_type: integer
+      - name: hours_since_start
+        description: Hours elapsed since offer start.
+        data_type: integer
+      - name: response_flag
+        description: Binary flag indicating if the customer responded to the offer.
+        data_type: integer
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: response_timing
+        description: Categorization of response time (Same Day Response, Quick Response, Delayed Response).
+        data_type: text
+      - name: updated_at
+        description: Last update timestamp of the record.
         data_type: timestamp
-        data_tests:
+        tests:
           - not_null
-
   - name: offer_performance
-    description: Performance of different communication channels in driving customer responses to offers.
+    description: This model calculates the performance metrics for offers, including the total number of offers sent, the number of responded offers, and the response rate.
     columns:
       - name: offer_id
-        description: Unique identifier for each offer.
-        data_type: text
-        data_tests:
-          - not_null
+        description: The unique identifier for the offer.
       - name: offer_type
-        description: Type of the offer.
-        data_type: text
+        description: The type of the offer (e.g., discount, promotion).
       - name: offer_channel
-        description: Channel used to deliver the offer.
-        data_type: text
+        description: The channel through which the offer was sent (e.g., email, SMS).
       - name: total_offers_sent
-        description: Total number of offers sent.
-        data_type: integer
-        data_tests:
-          - not_null
+        description: The total number of offers sent.
       - name: total_offers_responded
-        description: Total number of offers responded to.
-        data_type: integer
-        data_tests:
-          - not_null
+        description: The total number of offers that received a response.
       - name: response_rate
-        description: Response rate for the offer.
-        data_type: numeric
-        data_tests:
-          - not_null
+        description: The rate of responses to the offers, calculated as the total number of responses divided by the total number of offers sent.
+custom_tests:
+  - name: positive_value
+    description: Ensures the column contains only positive values
+    tests:
+      - SELECT column_name FROM {{ this }} WHERE column_name < 0

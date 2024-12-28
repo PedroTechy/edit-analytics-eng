@@ -18,3 +18,7 @@
         {% endfor %}
     end
 {% endmacro %}
+
+{% macro count_responded(transaction_status_column, responded_value) %}
+    sum(case when {{ transaction_status_column }} = '{{ responded_value }}' then 1 else 0 end)
+{% endmacro %}
